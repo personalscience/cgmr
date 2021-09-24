@@ -8,6 +8,11 @@ richard_glucose <- glucose_df_from_libreview_csv(
   system.file("extdata", package = "psiCGM", "Firstname2Lastname2_glucose.csv")
 ) %>% filter(time>as_date("2021-06-01"))
 
+richard_notes_glucose <-   notes_df_from_glucose_table(richard_glucose, user_id=1234)
+richard_notes_notes <- notes_df_from_csv(
+  user_id = 1234,
+  file = system.file("extdata", package = "psiCGM", "Firstname2Lastname2_notes.csv")
+)
 
 martha_notes <-
   notes_df_from_csv(
@@ -16,13 +21,9 @@ martha_notes <-
   )
 
 glucose_records <- bind_rows(martha_glucose,richard_glucose)
+notes_records <- bind_rows(martha_notes, richard_notes_glucose, richard_notes_notes)
 
 ftf_df0 <- food_times_df_fast(glucose_records, notes_records, prefixLength = 0)
-
-ft_df0 <- food_times_df(prefixLength = 0)
-
-# 2 user_id and
-ft_df1 <- food_times_df(prefixLength = 20, foodname = "blueberries")
 ftf_df1 <- food_times_df_fast(glucose_records, notes_records, prefixLength = 20, foodname = "blueberries")
 
 mealnames_blu <-
@@ -36,10 +37,6 @@ test_that("food_times_df can handle non-existent users", {
   expect_equal(food_times_df_fast(user_id = -1), NULL)
 })
 
-
-test_that("food_times_df holds correct mealnames",{
-  expect_equal(ft_df1 %>% distinct(meal), mealnames_blu)
-})
 
 test_that("food_times_df_fast holds correct mealnames",{
   expect_equal(ftf_df1 %>% distinct(meal), mealnames_blu)

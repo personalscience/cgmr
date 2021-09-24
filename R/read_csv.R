@@ -1,3 +1,9 @@
+# Initial constants ----
+
+
+#' @title Possible values for `Activity` column in Notes.
+NOTES_COLUMNS <- c("Start", "End", "Activity","Comment", "Z","user_id", "TZ")
+ACTIVITY_TYPES <- c("Sleep", "Event", "Food","Exercise")
 
 
 # Read CSV ----
@@ -59,15 +65,45 @@ notes_df_from_csv <- function(file=system.file("extdata", package="psiCGM", "Fir
                               user_id = 1235) {
 
 
-  notes <-   read_csv(file) %>%
-    transmute(Start = mdy_hm(Start, tz = Sys.timezone()),
-              End = mdy_hm(End, tz = Sys.timezone()),
-              Activity = factor(Activity, levels = NOTES_COLUMNS),
-              Comment = Comment,
-              Z = Z    )
+  notes <-   read_csv(file, show_col_types = FALSE)
+  transmute("{NOTES_COLUMNS[1]}" := mdy_hm(Start),
+            "{NOTES_COLUMNS[2]}" := mdy_hm(End),
+            "{NOTES_COLUMNS[3]}" := factor(Activity, levels = ACTIVITY_TYPES),
+            "{NOTES_COLUMNS[4]}" :=  Comment,
+            "{NOTES_COLUMNS[5]}" := Z,
+            "{NOTES_COLUMNS[6]}" := user_id,
+            "{NOTES_COLUMNS[7]}" := as.integer(NA))
 
 
-  notes$Start <- lubridate::force_tz(notes$Start, tzone=Sys.timezone())
-  notes$End <- lubridate::force_tz(notes$End, tzone=Sys.timezone())
-  return(bind_cols(notes,user_id = user_id))
+  return(notes)
 }
+
+
+#' @title Return all `glucose_records` that have something in the notes field
+#' @description Notes are sometimes located in the "Notes" field of a CSV file,
+#' which in turn will be saved in `glucose_records`.
+#' Harvest any such notes and place them in `notes_records`.
+#' @param user_id User ID
+#' @return dataframe of
+#' @export
+#'
+notes_df_from_glucose_table <- function(glucose_records,
+                                        user_id = 1234) {
+
+
+  ID = user_id
+
+  food_records <- glucose_records %>%
+    filter(user_id == ID) %>%
+    filter(!is.na(food)) %>% collect() %>%
+    transmute(Start = time,
+              End = lubridate::as_datetime(NA),
+              Activity = factor("Food", levels = ACTIVITY_TYPES),
+              Comment = as.character(stringr::str_replace(food,"Notes=","")),
+              Z = as.numeric(NA),
+              user_id = user_id)
+
+  return(food_records)
+
+}
+
