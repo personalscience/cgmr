@@ -1,3 +1,5 @@
+.Rbuildignore
+
 # History files
 .Rhistory
 .Rapp.history
@@ -19,6 +21,7 @@
 
 # RStudio files
 .Rproj.user/
+*.Rproj
 
 # produced vignettes
 vignettes/*.html
@@ -37,3 +40,4 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+.Rproj.user

@@ -26,7 +26,7 @@ glucose_df_from_libreview_csv <- function(file=system.file("extdata",
   glucose_raw <-
     readr::read_csv(file, skip = skip_lines, col_types = "cccdddddcddddcddddd") %>%
     transmute(
-      timestamp = lubridate::mdy_hm(`Device Timestamp`, tz = tz),
+      timestamp = lubridate::mdy_hm(`Device Timestamp`),
       record_type = `Record Type`,
       glucose_historic = `Historic Glucose mg/dL`,
       glucose_scan = `Scan Glucose mg/dL`,
