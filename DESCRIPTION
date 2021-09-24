@@ -1,0 +1,16 @@
+Package: cgmr
+Title: Continuous Glucose Monitor Data Analysis
+Version: 0.0.2.0000
+Authors@R: 
+    person(given = "Richard",
+           family = "Sprague",
+           role = c("aut", "cre"),
+           email = "sprague@personalscience.com",
+           comment = c(ORCID = "0000-0002-3789-5747"))
+Description: Read raw data output from a continuous glucose monitor.
+    Perform calculations on the data, graph it, and more.
+License: `use_mit_license()`
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
