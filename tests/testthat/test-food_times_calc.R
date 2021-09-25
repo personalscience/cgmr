@@ -27,14 +27,15 @@ ftf_df0 <- food_times_df_fast(glucose_records, notes_records, prefixLength = 0)
 ftf_df1 <- food_times_df_fast(glucose_records, notes_records, prefixLength = 20, foodname = "blueberries")
 
 mealnames_blu <-
-  as_tibble_col(c("MSprague-6/5-blueberries",
-                  "RSprague-7/31-blueberries",
-                  "RSprague-8/2-blueberries"
+  as_tibble_col(c("6/4-blueberries",
+                  "7/30-blueberries",
+                  "7/31-blueberries",
+                  "8/2-blueberries"
   ), column_name = "meal")
 
 
 test_that("food_times_df can handle non-existent users", {
-  expect_equal(food_times_df_fast(user_id = -1), NULL)
+  expect_equal(food_times_df_fast(glucose_records, notes_records, user_id = -1), NULL)
 })
 
 
@@ -44,7 +45,7 @@ test_that("food_times_df_fast holds correct mealnames",{
 
 
 test_that("food_times_df holds correct start time",{
-  expect_equal(ft_df1 %>%
+  expect_equal(ftf_df1 %>%
                  group_by(meal) %>%
                  arrange(meal,t) %>%
                  ungroup() %>%
@@ -52,7 +53,7 @@ test_that("food_times_df holds correct start time",{
 })
 
 test_that("food_times_df holds correct start time: prefixLength = 0 ",{
-  expect_equal(ft_df0 %>%
+  expect_equal(ftf_df0 %>%
                  group_by(meal) %>%
                  arrange(meal,t) %>%
                  ungroup() %>%
@@ -68,11 +69,11 @@ test_that("food_times_df_fast holds correct start time: prefixLength = 0 ",{
 })
 
 test_that("normalize_value() works for prefixLength = 0 ",{
-  expect_equal(ft_df0 %>% normalize_value() %>% group_by(meal) %>% slice(5) %>% pull(value),
+  expect_equal(ftf_df0 %>% normalize_value() %>% group_by(meal) %>% slice(5) %>% pull(value),
                c(-4,2,-38))
 })
 
 test_that("normalize_value() works for prefixLength = 20 ",{
-  expect_equal(ft_df1 %>% normalize_value() %>% group_by(meal) %>% slice(5) %>% pull(value),
+  expect_equal(ftf_df1 %>% normalize_value() %>% group_by(meal) %>% slice(5) %>% pull(value),
                c(-17,  -14,   -3))
 })

@@ -1,6 +1,52 @@
 # psi_calc_util.r
 #
 
+#' @title normalize with prefixlength
+#' @description
+#' Assumes `df includes columns `t` and `value`
+#' @param df a dataframe
+#' @return dataframe
+#' @export
+normalize_value <- function(df) {
+
+  after_start <- df %>% group_by(meal) %>%
+    filter(t>=0) %>%
+    arrange(meal,t) %>%
+    mutate(value = value-first(value)) %>% ungroup()
+
+  before_start <- df %>% group_by(meal) %>%
+    filter(t<0) %>%
+    arrange(meal,t) %>%
+    mutate(value = value - last(value)) %>% ungroup()
+
+  bind_rows(before_start, after_start) %>% group_by(meal,t)
+}
+
+#' @title normalize all `df$value` to a range from 0 to 1
+#' @description
+#' Assumes `df includes columns `t` and `value`
+#' @param df a dataframe
+#' @return dataframe
+#' @export
+normalize_to_zero <- function(df) {
+
+  after_start <- df %>% group_by(meal) %>%
+    filter(t>=0) %>%
+    arrange(meal,t) %>%
+    mutate(value = (value - min(value)) / (max(value) - min(value))) %>%
+    #mutate(value = value-first(value)) %>%
+    ungroup()
+
+  before_start <- df %>% group_by(meal) %>%
+    filter(t<0) %>%
+    arrange(meal,t) %>%
+    mutate(value = (value - min(value)) / (max(value) - min(value))) %>%
+    #mutate(value = value - last(value)) %>%
+    ungroup()
+
+  bind_rows(before_start, after_start) %>% group_by(meal,t)
+}
+
 
 #' @title Calculate Area Under the Curve of glucose values for a restricted timeframe
 #' @description Returns AUC for the first timelength minutes after the start of the glucose_df

@@ -17,7 +17,7 @@ ACTIVITY_TYPES <- c("Sleep", "Event", "Food","Exercise")
 #' @param user_id new user ID to be appended to the dataframe
 #' @export
 #' @import readr magrittr tibble
-#' @import lubridate
+#' @import lubridate stringr
 glucose_df_from_libreview_csv <- function(file=system.file("extdata",
                                                            package = "psiCGM",
                                                            "Firstname2Lastname2_glucose.csv"),
@@ -65,14 +65,14 @@ notes_df_from_csv <- function(file=system.file("extdata", package="psiCGM", "Fir
                               user_id = 1235) {
 
 
-  notes <-   read_csv(file, show_col_types = FALSE)
-  transmute("{NOTES_COLUMNS[1]}" := mdy_hm(Start),
-            "{NOTES_COLUMNS[2]}" := mdy_hm(End),
-            "{NOTES_COLUMNS[3]}" := factor(Activity, levels = ACTIVITY_TYPES),
-            "{NOTES_COLUMNS[4]}" :=  Comment,
-            "{NOTES_COLUMNS[5]}" := Z,
-            "{NOTES_COLUMNS[6]}" := user_id,
-            "{NOTES_COLUMNS[7]}" := as.integer(NA))
+  notes <-   read_csv(file, show_col_types = FALSE) %>%
+  transmute(Start = mdy_hm(Start),
+            End = mdy_hm(End),
+            Activity = factor(Activity, levels = ACTIVITY_TYPES),
+            Comment =  Comment,
+            Z = Z,
+            user_id = user_id,
+            TZ = as.integer(NA))
 
 
   return(notes)
