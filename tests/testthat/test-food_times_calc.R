@@ -70,10 +70,10 @@ test_that("food_times_df_fast holds correct start time: prefixLength = 0 ",{
 
 test_that("normalize_value() works for prefixLength = 0 ",{
   expect_equal(ftf_df0 %>% normalize_value() %>% group_by(meal) %>% slice(5) %>% pull(value),
-               c(-4,2,-38))
+               c(-38,-4,2))
 })
 
 test_that("normalize_value() works for prefixLength = 20 ",{
   expect_equal(ftf_df1 %>% normalize_value() %>% group_by(meal) %>% slice(5) %>% pull(value),
-               c(-17,  -14,   -3))
+               c(-27, -3, -17))
 })

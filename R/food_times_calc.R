@@ -46,7 +46,7 @@ food_times_df_fast <-
     users <- unique(notes_df$user_id)
 
     for (user in users) {
-
+      username <- as.character(user)
       f <- glucose_df %>% filter(user_id == user) %>% filter(!is.na(value))
       times <- notes_df %>% filter(user_id == user)  %>% pull(Start)
       for (atime in times) {
@@ -60,11 +60,13 @@ food_times_df_fast <-
         else new_df <- filtered_df %>%
           transmute(t = as.numeric(time - min(time))/60 - prefixLength,
                     value = value,
+                    username = username,
                     date_ch = sprintf("%i/%i",
                                       month(as_datetime(atime)),
                                       day(as_datetime(atime))),
                     timestamp = as_datetime(atime),
-                    meal=sprintf("%i/%i-%s",
+                    meal=sprintf("%s-%i/%i-%s",
+                                 username,
                                  month(as_datetime(atime)),
                                  day(as_datetime(atime)),
                                  foodname),
