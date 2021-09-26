@@ -5,7 +5,7 @@
 \title{read a Nutrisense export file and convert to the PSI CGM format}
 \usage{
 glucose_df_from_nutrisense(
-  filepath = system.file("extdata", package = "psiCGM",
+  filepath = system.file("extdata", package = "cgmr",
     "Firstname3Lastname3_nutrisense.csv"),
   user_id = 2000,
   tz = "UTC"
