@@ -7,6 +7,8 @@
 notes_df_from_glucose_table(glucose_records, user_id = 1234)
 }
 \arguments{
+\item{glucose_records}{valid glucose record dataframe}
+
 \item{user_id}{User ID}
 }
 \value{

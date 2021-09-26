@@ -5,10 +5,10 @@
 \title{read a Nutrisense export file and convert to the PSI CGM format}
 \usage{
 glucose_df_from_nutrisense(
-  filepath = file.path(config::get("tastermonial")$datadir,
-    "1627653419114_export-SherriJo.csv"),
-  user_id = 1005,
-  tz = Sys.timezone()
+  filepath = system.file("extdata", package = "psiCGM",
+    "Firstname3Lastname3_nutrisense.csv"),
+  user_id = 2000,
+  tz = "UTC"
 )
 }
 \arguments{

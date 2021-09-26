@@ -10,10 +10,9 @@
 #' @param tz time zone
 #' @return a canonical glucose value dataframe
 #' @export
-glucose_df_from_nutrisense <- function(filepath = file.path(config::get("tastermonial")$datadir,
-                                                            "1627653419114_export-SherriJo.csv"),
-                                       user_id = 1005, # placeholder
-                                       tz = Sys.timezone()){
+glucose_df_from_nutrisense <- function(filepath = system.file("extdata", package = "cgmr", "Firstname3Lastname3_nutrisense.csv"),
+                                       user_id = 2000, # placeholder
+                                       tz = "UTC") {
 
 
   firstline <- readLines(con = filepath, 1) %>%
