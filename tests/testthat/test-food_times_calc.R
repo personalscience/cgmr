@@ -27,10 +27,10 @@ ftf_df0 <- food_times_df_fast(glucose_records, notes_records, prefixLength = 0)
 ftf_df1 <- food_times_df_fast(glucose_records, notes_records, prefixLength = 20, foodname = "blueberries")
 
 mealnames_blu <-
-  as_tibble_col(c("6/4-blueberries",
-                  "7/30-blueberries",
-                  "7/31-blueberries",
-                  "8/2-blueberries"
+  as_tibble_col(c("1235-6/4-blueberries",
+                  "1234-7/30-blueberries",
+                  "1234-7/31-blueberries",
+                  "1234-8/2-blueberries"
   ), column_name = "meal")
 
 
@@ -44,29 +44,20 @@ test_that("food_times_df_fast holds correct mealnames",{
 })
 
 
-test_that("food_times_df holds correct start time",{
+test_that("food_times_df holds correct start time: prefixLength = 20",{
   expect_equal(ftf_df1 %>%
                  group_by(meal) %>%
-                 arrange(meal,t) %>%
-                 ungroup() %>%
-                 slice(2) %>% pull(value), 71)
+                 slice(1) %>%
+                 pull(value),
+               c(91,56,79,64))
 })
 
 test_that("food_times_df holds correct start time: prefixLength = 0 ",{
   expect_equal(ftf_df0 %>%
                  group_by(meal) %>%
-                 arrange(meal,t) %>%
-                 ungroup() %>%
-                 slice(2) %>% pull(value), 81)
+                 slice(2) %>% pull(value), c(136,81,88))
 })
 
-test_that("food_times_df_fast holds correct start time: prefixLength = 0 ",{
-  expect_equal(ftf_df0 %>%
-                 group_by(meal) %>%
-                 arrange(meal,t) %>%
-                 ungroup() %>%
-                 slice(2) %>% pull(value), 81)
-})
 
 test_that("normalize_value() works for prefixLength = 0 ",{
   expect_equal(ftf_df0 %>% normalize_value() %>% group_by(meal) %>% slice(5) %>% pull(value),

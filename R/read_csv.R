@@ -83,6 +83,7 @@ notes_df_from_csv <- function(file=system.file("extdata", package="psiCGM", "Fir
 #' @description Notes are sometimes located in the "Notes" field of a CSV file,
 #' which in turn will be saved in `glucose_records`.
 #' Harvest any such notes and place them in `notes_records`.
+#' @param glucose_records valid glucose record dataframe
 #' @param user_id User ID
 #' @return dataframe of
 #' @export
