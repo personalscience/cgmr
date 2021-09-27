@@ -1,0 +1,57 @@
+---
+title: "cgmr: continous glucose monitoring for R"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Continuous Glucose Monitoring Package for R
+
+Process raw CGM data from Freestyle Libreview, Levels, Nutrisense and others.
+
+# Prerequisites
+
+Download a CSV file from Libreview.com
+
+```{r showTypical, message = FALSE}
+library(tidyverse)
+library(lubridate)
+library(cgmr)
+
+cgm_sample <- glucose_df_from_libreview_csv(system.file("extdata", package = "cgmr", "Firstname1Lastname1_glucose.csv"))
+
+glucose_records <- cgm_sample 
+notes_records <- notes_df_from_glucose_table(glucose_records)
+
+head(glucose_records)
+
+head(notes_records)
+
+
+
+```
+
+
+The most important function, `food_times_df_fast()` looks through all glucose and notes records to return a dataframe of times during a time interval after eating a specific food, in this case "Keto Bar", which the CGM wearer entered in the Notes field of the app.
+
+```{r showFoodTimes, message = FALSE}
+
+
+ft <- food_times_df_fast(glucose_records, notes_records, foodname = "keto bar")
+
+ft
+```
+
+
+And of course you can easily plot the results
+
+```{r plotFoodTimes}
+
+ft %>% ggplot(aes(x=t, y = value, color = meal)) + geom_line()
+
+
+```
