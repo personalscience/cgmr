@@ -9,17 +9,17 @@
 #' @export
 normalize_value <- function(df) {
 
-  after_start <- df %>% group_by(meal) %>%
-    filter(t>=0) %>%
-    arrange(meal,t) %>%
-    mutate(value = value-first(value)) %>% ungroup()
+  after_start <- df %>% group_by(`meal`) %>%
+    filter(`t` >= 0) %>%
+    arrange(`meal`,`t`) %>%
+    mutate(value = `value`-first(`value`)) %>% ungroup()
 
-  before_start <- df %>% group_by(meal) %>%
-    filter(t<0) %>%
-    arrange(meal,t) %>%
-    mutate(value = value - last(value)) %>% ungroup()
+  before_start <- df %>% group_by(`meal`) %>%
+    filter(`t` < 0) %>%
+    arrange(`meal`, `t`) %>%
+    mutate(value = `value` - last(`value`)) %>% ungroup()
 
-  bind_rows(before_start, after_start) %>% group_by(meal,t)
+  bind_rows(before_start, after_start) %>% group_by(`meal`,`t`)
 }
 
 #' @title normalize all `df$value` to a range from 0 to 1

@@ -73,7 +73,7 @@ glucose_df_from_levels <- function(filepath = system.file("extdata", package = "
 
   glucose_raw <-
     readr::read_csv(filepath, skip=skip_lines, show_col_types = FALSE) %>%
-    transmute(time = `Time (UTC)`,
+    transmute(`time` = `Time (UTC)`,
               value = ifelse(`Type of Reading` == "timeseries",
                              `Glucose Reading (mg/dL)`,
                              `Glucose Reading (mg/dL)`),

@@ -43,7 +43,7 @@ glucose_df_from_libreview_csv <- function(file=system.file("extdata",
 
   glucose_df <- glucose_raw  %>%
     #dplyr::filter(record_type != 6) %>% # Record type 6 does nothing
-    transmute(time = `timestamp`,
+    transmute(`time` = `timestamp`,
               scan = glucose_scan,
               hist = glucose_historic,
               strip = strip_glucose,
@@ -66,11 +66,11 @@ notes_df_from_csv <- function(file=system.file("extdata", package="psiCGM", "Fir
 
 
   notes <-   read_csv(file, show_col_types = FALSE) %>%
-  transmute(Start = mdy_hm(Start),
-            End = mdy_hm(End),
-            Activity = factor(Activity, levels = ACTIVITY_TYPES),
-            Comment =  Comment,
-            Z = Z,
+  transmute(Start = mdy_hm(.data[["Start"]]),
+            End = mdy_hm(.data[["End"]]),
+            Activity = factor(.data[["Activity"]], levels = ACTIVITY_TYPES),
+            Comment =  .data[["Comment"]],
+            Z = .data[["Z"]],
             user_id = user_id,
             TZ = as.integer(NA))
 
@@ -96,11 +96,11 @@ notes_df_from_glucose_table <- function(glucose_records,
 
   food_records <- glucose_records %>%
     filter(user_id == ID) %>%
-    filter(!is.na(food)) %>% collect() %>%
-    transmute(Start = time,
+    filter(!is.na(`food`)) %>% collect() %>%
+    transmute(Start = `time`,
               End = lubridate::as_datetime(NA),
               Activity = factor("Food", levels = ACTIVITY_TYPES),
-              Comment = as.character(stringr::str_replace(food,"Notes=","")),
+              Comment = as.character(stringr::str_replace(`food`,"Notes=","")),
               Z = as.numeric(NA),
               user_id = user_id)
 
