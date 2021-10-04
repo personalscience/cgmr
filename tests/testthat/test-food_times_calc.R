@@ -33,6 +33,12 @@ mealnames_blu <-
                   "1234-8/2-blueberries"
   ), column_name = "meal")
 
+v1 <- ftf_df1 %>% group_by(date_ch) %>% filter(date_ch == "7/31")
+v2 <- ftf_df1 %>% group_by(date_ch) %>% filter(date_ch == "6/4")
+
+test_that("interpolation works", {
+  expect_equal(interpolated(v1$t,v2, operator = function(x) {sum(x)}), sum(v1$t))
+})
 
 test_that("food_times_df can handle non-existent users", {
   expect_equal(food_times_df_fast(glucose_records, notes_records, user_id = -1), NULL)

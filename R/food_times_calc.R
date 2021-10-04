@@ -1,4 +1,17 @@
 
+#' @title Interpolate values between two vectors
+#' @description Given two vectors `v1` and `v2`,
+#' return a new vector that has the same length as base
+#' @param v1
+#' @param v2
+#' @return vector
+interpolated <- function(v1, v2, operator = function(x) {x}){
+
+  result = do.call(operator, list(v1))
+  return(result)
+
+}
+
 
 
 #' @title Glucose values after eating a specific food (deprecated)
