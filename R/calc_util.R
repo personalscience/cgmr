@@ -2,8 +2,9 @@
 #
 
 #' @title normalize with prefixlength
-#' @description
-#' Assumes `df includes columns `t` and `value`
+#' @description Given any dataframe `df` with
+#' columns `t` and `value`, return an equivalent dataframe where all the `value`s
+#' are reset such that they start at 0 instead of whatever they started at.
 #' @param df a dataframe
 #' @return dataframe
 #' @export
