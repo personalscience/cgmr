@@ -1,15 +1,44 @@
 
-#' @title Interpolate values between two vectors
+#' @title (UNFINISHED) Interpolate values between two vectors
 #' @description Given two vectors `v1` and `v2`,
 #' return a new vector that has the same length as base
-#' @param v1
-#' @param v2
+#' @param v1 first vector
+#' @param v2 second vector
+#' @param operator any function
 #' @return vector
 interpolated <- function(v1, v2, operator = function(x) {x}){
 
   result = do.call(operator, list(v1))
   return(result)
 
+}
+
+#' @title Combine multiple glucose values
+#' @description Given a dataframe of the form returned by `food_times_df()`,
+#' returns that df augmented with an additional row `ave`, which
+#' represents the average across all glucose values at that time slot
+#' @param food_times_df a dataframe of similar meals offset by a constant time
+#' @return dataframe `food_times_df` augmented with a new `ave` row
+#' @export
+combined_food_times_df <- function(food_times_df) {
+
+  cut_items <- food_times_df %>% select(`t`,`value`,`date_ch`,`meal`,`foodname`, `user_id`, `timestamp`) %>%
+    mutate(nn=n()) %>%
+    group_by(`meal`) %>%
+    add_count() %>%
+    filter(n>5) %>%  # must have enough data points to be worth comparing
+    ungroup() %>%
+    mutate(max_len = max(n)) %>%
+    group_by(`meal`) %>%
+    mutate(id = cur_group_id()) %>%
+    mutate(time_slice = ggplot2::cut_interval(`t`, length(`t`), labels=FALSE)) %>%
+    ungroup() %>%
+    group_by(time_slice) %>%
+    mutate(ave = mean(`value`, na.rm = TRUE)) %>%  # consolidate any values within a given time_slice
+    ungroup() %>%
+    arrange(`meal`)
+
+  return(cut_items %>% select(-(nn:time_slice)))
 }
 
 

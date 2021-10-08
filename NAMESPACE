@@ -2,6 +2,7 @@
 
 export(auc_calc)
 export(auc_calc_old)
+export(combined_food_times_df)
 export(food_times_df)
 export(food_times_df_fast)
 export(glucose_df_from_levels)

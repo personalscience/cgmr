@@ -40,6 +40,13 @@ test_that("interpolation works", {
   expect_equal(interpolated(v1$t,v2, operator = function(x) {sum(x)}), sum(v1$t))
 })
 
+test_that("combined_food_times_df() gives reasonable answers",{
+  expect_equal(combined_food_times_df(ftf_df0) %>% group_by(meal) %>% slice(2) %>% pull(ave),
+               rep(101.66667,3),
+               tolerance = 1e-3)
+
+})
+
 test_that("food_times_df can handle non-existent users", {
   expect_equal(food_times_df_fast(glucose_records, notes_records, user_id = -1), NULL)
 })
