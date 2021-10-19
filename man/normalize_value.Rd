@@ -13,5 +13,7 @@ normalize_value(df)
 dataframe
 }
 \description{
-Assumes \verb{df includes columns }t\code{and}value`
+Given any dataframe \code{df} with
+columns \code{t} and \code{value}, return an equivalent dataframe where all the \code{value}s
+are reset such that they start at 0 instead of whatever they started at.
 }
