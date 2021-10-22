@@ -64,3 +64,12 @@ test_that("Full incremental AUC values are correct", {
                tolerance = .1)
 })
 
+test_that("AUC for all specific foods are correct", {
+  expect_equal(auc_for_food("Blueberries", notes_records = notes_records, glucose_records = glucose_records) %>% pull(iAUC),
+               c(82.2, 7.92, 33.8),
+               tolerance = 0.001)
+  expect_equal(df_for_all_auc(c("Blueberries", "watermelon"), glucose_records, notes_records) %>% pull(iAUC),
+               c(238.5, 82.2, 7.92, 33.8),
+               tolerance = 0.001)
+})
+
