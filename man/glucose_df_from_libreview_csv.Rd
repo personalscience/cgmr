@@ -5,7 +5,7 @@
 \title{Read a standard format Libreview CSV file}
 \usage{
 glucose_df_from_libreview_csv(
-  file = system.file("extdata", package = "psiCGM", "Firstname2Lastname2_glucose.csv"),
+  file = system.file("extdata", package = "cgmr", "Firstname2Lastname2_glucose.csv"),
   user_id = 1234
 )
 }

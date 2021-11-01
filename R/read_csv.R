@@ -19,7 +19,7 @@ ACTIVITY_TYPES <- c("Sleep", "Event", "Food","Exercise")
 #' @import readr magrittr tibble
 #' @import lubridate stringr
 glucose_df_from_libreview_csv <- function(file=system.file("extdata",
-                                                           package = "psiCGM",
+                                                           package = "cgmr",
                                                            "Firstname2Lastname2_glucose.csv"),
                                           user_id = 1234) {
 
@@ -61,7 +61,7 @@ glucose_df_from_libreview_csv <- function(file=system.file("extdata",
 #' @param user_id user ID to associate with this dataframe
 #' @return dataframe for a valid notes CSV file
 #' @export
-notes_df_from_csv <- function(file=system.file("extdata", package="psiCGM", "FirstName1Lastname1_notes.csv"),
+notes_df_from_csv <- function(file=system.file("extdata", package="cgmr", "FirstName1Lastname1_notes.csv"),
                               user_id = 1235) {
 
 

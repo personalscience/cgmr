@@ -2,16 +2,20 @@
 % Please edit documentation in R/calc_util.R
 \name{df_for_all_auc}
 \alias{df_for_all_auc}
-\title{make one dataframe showing \code{auc_for_food()} for all foods in s_list}
+\title{make one dataframe showing \code{auc_for_food()} for a vector of food names}
 \usage{
-df_for_all_auc(food_list)
+df_for_all_auc(food_list, glucose_records, notes_records)
 }
 \arguments{
 \item{food_list}{vector of character strings with each foodname}
+
+\item{glucose_records}{valid dataframe of glucose results}
+
+\item{notes_records}{valid dataframe of notes}
 }
 \value{
 dataframe representing all results of auc_for_food() calls
 }
 \description{
-make one dataframe showing \code{auc_for_food()} for all foods in s_list
+make one dataframe showing \code{auc_for_food()} for a vector of food names
 }

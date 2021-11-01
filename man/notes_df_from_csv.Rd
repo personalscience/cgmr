@@ -5,7 +5,7 @@
 \title{Notes dataframe from a CSV}
 \usage{
 notes_df_from_csv(
-  file = system.file("extdata", package = "psiCGM", "FirstName1Lastname1_notes.csv"),
+  file = system.file("extdata", package = "cgmr", "FirstName1Lastname1_notes.csv"),
   user_id = 1235
 )
 }

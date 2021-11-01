@@ -7,13 +7,13 @@ sample_csv <- glucose_df_from_libreview_csv(file=SAMPLE_NEW_CSV,
 
 richard_glucose <- glucose_df_from_libreview_csv(
   user_id = 1234,
-  system.file("extdata", package = "psiCGM", "Firstname2Lastname2_glucose.csv")
+  system.file("extdata", package = "cgmr", "Firstname2Lastname2_glucose.csv")
 ) %>% filter(`time`>as_date("2021-06-01"))
 
 richard_notes_glucose <-   notes_df_from_glucose_table(richard_glucose, user_id=1234)
 richard_notes_notes <- notes_df_from_csv(
   user_id = 1234,
-  file = system.file("extdata", package = "psiCGM", "Firstname2Lastname2_notes.csv")
+  file = system.file("extdata", package = "cgmr", "Firstname2Lastname2_notes.csv")
 )
 
 
