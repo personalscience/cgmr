@@ -8,6 +8,57 @@ ACTIVITY_TYPES <- c("Sleep", "Event", "Food","Exercise")
 
 # Read CSV ----
 
+#' @title name of the person associated with a Libreview glucose file.
+#' @description
+#' Given a valid Libreview file, return a string of the form first_name last_name
+#' @param filepath path to the CSV file
+#' @importFrom stringr str_split str_squish str_detect
+#' @return a space-separated character string made of first_name last_name. NA if no name found
+#' @export
+name_from_libreview_file <- function(filepath) {
+  first2 <- readLines(con=filepath,2)
+  if (str_detect(first2[1], "Patient"))
+  {name <- str_split(first2[2],pattern=",")[[1]][1]}
+  else name <- str_split(first2[1],pattern=",")[[1]][5]
+  return(str_squish(name))
+}
+
+
+#' Read a raw libreview CSV file and return it as a plain dataframe
+#' @title Read a standard format Libreview CSV file
+#' @return a canonical glucose value dataframe
+#' @param file path to a valid Libreview CSV file
+#' @export
+#' @import readr magrittr tibble
+#' @import lubridate stringr
+libreview_csv_df <- function(file=system.file("extdata",
+                                              package = "cgmr",
+                                              "Firstname2Lastname2_glucose.csv")){
+
+  firstline <- readLines(con = file, 1) %>%
+    str_split(pattern = ",", simplify = TRUE)
+
+  skip_lines <- if_else(firstline[1] == "Glucose Data", 1, 2)
+
+  name <- name_from_libreview_file(file)
+
+  glucose_raw <-
+    readr::read_csv(file, skip = skip_lines, col_types = "cccdddddcddddcddddd") %>%
+    transmute(
+      timestamp = lubridate::mdy_hm(`Device Timestamp`),
+      record_type = `Record Type`,
+      glucose_historic = `Historic Glucose mg/dL`,
+      glucose_scan = `Scan Glucose mg/dL`,
+      strip_glucose = `Strip Glucose mg/dL`,
+      notes = if_else(!is.na(Notes), paste0("Notes=",Notes),
+                      Notes)
+    )
+
+  return(list(glucose_raw = glucose_raw, name = name))
+
+}
+
+
 #' Read a valid libreview CSV file and return a dataframe and new user id
 #' Since Libreview files don't already include a user ID, append one to the dataframe that is returned.
 #' Importantly, datetimes are assumed to be `Sys.timezone()`.
@@ -29,19 +80,9 @@ glucose_df_from_libreview_csv <- function(file=system.file("extdata",
 
   skip_lines <- if_else(firstline[1] == "Glucose Data", 1, 2)
 
-  glucose_raw <-
-    readr::read_csv(file, skip = skip_lines, col_types = "cccdddddcddddcddddd") %>%
-    transmute(
-      timestamp = lubridate::mdy_hm(`Device Timestamp`),
-      record_type = `Record Type`,
-      glucose_historic = `Historic Glucose mg/dL`,
-      glucose_scan = `Scan Glucose mg/dL`,
-      strip_glucose = `Strip Glucose mg/dL`,
-      notes = if_else(!is.na(Notes), paste0("Notes=",Notes),
-                      Notes)
-    )
+  glucose_raw <- libreview_csv_df(file)
 
-  glucose_df <- glucose_raw  %>%
+  glucose_df <- glucose_raw[["glucose_raw"]]  %>%
     #dplyr::filter(record_type != 6) %>% # Record type 6 does nothing
     transmute(`time` = `timestamp`,
               scan = glucose_scan,
