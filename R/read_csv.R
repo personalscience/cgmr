@@ -51,7 +51,12 @@ libreview_csv_df <- function(file=system.file("extdata",
       glucose_scan = `Scan Glucose mg/dL`,
       strip_glucose = `Strip Glucose mg/dL`,
       notes = if_else(!is.na(Notes), paste0("Notes=",Notes),
-                      Notes)
+                      Notes),
+      device = `Device`,
+      serial_number = `Serial Number`,
+      food = `Non-numeric Food`,
+      carbs = `Carbohydrates (grams)`,
+
     )
 
   return(list(glucose_raw = glucose_raw, name = name))
