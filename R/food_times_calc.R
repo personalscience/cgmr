@@ -103,9 +103,10 @@ food_times_df_fast <-
           transmute(t = as.numeric(`time` - min(`time`))/60 - prefixLength,
                     value = value,
                     username = username,
-                    date_ch = sprintf("%i/%i",
+                    date_ch = sprintf("%i/%i-%i",
                                       month(as_datetime(atime)),
-                                      day(as_datetime(atime))),
+                                      day(as_datetime(atime)),
+                                      hour(as_datetime(atime))),
                     timestamp = as_datetime(atime),
                     meal=sprintf("%s-%i/%i-%s",
                                  username,
@@ -128,10 +129,9 @@ food_times_df_fast <-
 
 #' @title Glucose values after eating a specific food (local memory version)
 #' @description
-#' return a dataframe of the Glucose values for a `timeLength`
-#' following `foodname` appearing in `notes_records`.
-#' This function calls the database directly
-#' and is intended to work standalone, without other functions.
+#' Same results as `food_times_df()`. Return a dataframe of the Glucose values for a `timeLength`
+#' following `foodname` appearing in `notes_records`. Returned in the format
+#' `t`, `value`, `username`, `date-ch`, `timestamp`, `meal`, `foodname`, `user_id`
 #' @param user_id user ID.  If NULL then assume all users
 #' @param glucose_df a valid glucose dataframe
 #' @param notes_df a valid notes dataframe

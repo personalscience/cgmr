@@ -54,6 +54,7 @@ test_that("food_times_df can handle non-existent users", {
 
 test_that("food_times_df_fast holds correct mealnames",{
   expect_equal(ftf_df1 %>% distinct(meal), mealnames_blu)
+  expect_equal(ftf_df0 %>% distinct(date_ch) %>% as.character() , "c(\"6/26-9\", \"6/27-10\", \"8/8-12\")")
 })
 
 

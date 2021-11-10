@@ -30,8 +30,7 @@ food_times_df(
 dataframe
 }
 \description{
-return a dataframe of the Glucose values for a \code{timeLength}
-following \code{foodname} appearing in \code{notes_records}.
-This function calls the database directly
-and is intended to work standalone, without other functions.
+Same results as \code{food_times_df()}. Return a dataframe of the Glucose values for a \code{timeLength}
+following \code{foodname} appearing in \code{notes_records}. Returned in the format
+\code{t}, \code{value}, \code{username}, \code{date-ch}, \code{timestamp}, \code{meal}, \code{foodname}, \code{user_id}
 }
