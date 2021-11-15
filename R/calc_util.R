@@ -142,15 +142,17 @@ auc_for_food <- function(foodname = "Munk Pack",
                          start_limit = 100) {
   food_results <- food_times_df(glucose_df = glucose_records,
                                       notes_df = notes_records,
-                                      prefixLength = 0,
-                                      timeLength = 150,
+                                      prefixLength = prefixLength,
+                                      timeLength = timeLength,
                                       foodname=foodname)
 
-  fr <- food_results %>% group_by(meal) %>% mutate(time = t, first_val = first(value)) %>% select(t,time,value, first_val, meal,date_ch) %>%
+  fr <- food_results %>% group_by(meal) %>% mutate(time = t, first_val = first(value)) %>%
+    select(t,time,value, first_val, meal,date_ch, user_id) %>%
     filter(first_val < start_limit) %>%
-    summarize(ave = mean(value), sd = sd(value), AUC = DescTools::AUC(t,value),
+    summarize(user_id, ave = mean(value), sd = sd(value), AUC = DescTools::AUC(t,value),
               n = n(),
               iAUC = auc_calc(glucose_df = tibble(time,value))) %>% filter(iAUC > 0) %>%
+    distinct() %>%
     arrange(AUC)
 
   return(fr)
@@ -169,8 +171,9 @@ df_for_all_auc <- function(food_list,
   df <- NULL
   for(d in food_list ) {
     result <- auc_for_food(foodname = d,
-                           glucose_records,
-                           notes_records) %>% mutate(foodname = d)
+                           glucose_records = glucose_records,
+                           notes_records = notes_records,
+                           start_limit = 200) %>% mutate(foodname = d)
     df <- bind_rows(result,df)
   }
   return(df)
