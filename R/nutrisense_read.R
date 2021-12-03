@@ -1,5 +1,47 @@
 # read non-Freestyle Libre files
 
+
+#' @title Transform Raw Nutrisense into Canonical Glucose Format
+#' @param raw_data dataframe pulled from the Nutrisense file
+#' @param tz character string for time zone
+#' @return dataframe canonical Glucose format
+xform_nutrisense <- function(raw_data, tz) {
+  result <- raw_data %>% # col_types = "cccdddddcddddcddddd") %>%
+    filter(class %in% c("GlucoseMeasurement", "Meal")) %>% arrange(occurred_at) %>%
+    transmute(value = if_else(!is.na(value), value,lag(value)),
+              time = lubridate::mdy_hm(occurred_at, tz = tz),
+              food = ifelse(!is.na(description), paste0("Notes=",description), NA),
+              scan = value,
+              hist = value)
+
+  return(result)
+}
+
+#' @title Raw Dataframe from Nutrisense Filepath
+#' @param filepath path to a Nutrisense CSV file
+#' @param skip_lines integer lines to skip while reading
+#' @return dataframe raw nutrisense data format
+nutrisense_raw <- function(filepath = system.file("extdata", package = "cgmr", "Firstname3Lastname3_nutrisense.csv"),
+                           skip_lines = 1) {
+  readr::read_csv(filepath, skip = skip_lines,
+                  col_types = cols(
+                    class = col_character(),
+                    value = col_double(),
+                    time = col_character(),
+                    length = col_double(),
+                    photo_url = col_character(),
+                    description = col_character(),
+                    occurred_at = col_character(),
+                    body = col_character(),
+                    updated_at = col_character(),
+                    started_at = col_character(),
+                    ended_at = col_character(),
+                    created_by = col_character()
+                  ))
+}
+
+
+
 #' @title read a Nutrisense export file and convert to the PSI CGM format
 #' @description Nutrisense export files contain timestamped information about
 #' glucose values, meals, exercise, sleep, and more.
@@ -22,29 +64,10 @@ glucose_df_from_nutrisense <- function(filepath = system.file("extdata", package
 
   skip_lines <- 1
 
-  glucose_raw <-
-    readr::read_csv(filepath, skip = skip_lines,
-                    col_types = cols(
-                      class = col_character(),
-                      value = col_double(),
-                      time = col_character(),
-                      length = col_double(),
-                      photo_url = col_character(),
-                      description = col_character(),
-                      occurred_at = col_character(),
-                      body = col_character(),
-                      updated_at = col_character(),
-                      started_at = col_character(),
-                      ended_at = col_character(),
-                      created_by = col_character()
-                    )) %>% # col_types = "cccdddddcddddcddddd") %>%
-    filter(class %in% c("GlucoseMeasurement", "Meal")) %>% arrange(occurred_at) %>%
-    transmute(value = if_else(!is.na(value), value,lag(value)),
-              time = mdy_hm(occurred_at, tz = tz),
-              food = description,
-              scan = value,
-              hist = value,
-              user_id = user_id)
+  glucose_raw_ <- nutrisense_raw(filepath = filepath, skip_lines = skip_lines)
+  # col_types = "cccdddddcddddcddddd")
+
+  glucose_raw <- xform_nutrisense(glucose_raw_, tz = tz) %>% bind_cols(`user_id` = user_id)
 
   return(glucose_raw)
 }
@@ -75,29 +98,8 @@ nutrisense_results <- function(filepath = system.file("extdata", package = "cgmr
 
   skip_lines <- 1
 
-  glucose_raw <-
-    readr::read_csv(filepath, skip = skip_lines,
-                    col_types = cols(
-                      class = col_character(),
-                      value = col_double(),
-                      time = col_character(),
-                      length = col_double(),
-                      photo_url = col_character(),
-                      description = col_character(),
-                      occurred_at = col_character(),
-                      body = col_character(),
-                      updated_at = col_character(),
-                      started_at = col_character(),
-                      ended_at = col_character(),
-                      created_by = col_character()
-                    )) %>% # col_types = "cccdddddcddddcddddd") %>%
-    filter(class %in% c("GlucoseMeasurement", "Meal")) %>% arrange(occurred_at) %>%
-    transmute(`value` = if_else(!is.na(value), value,lag(value)),
-              `time` = mdy_hm(occurred_at, tz = tz),
-              `food` = description,
-              `scan` = value,
-              `hist` = value,
-              `user_id` = user_id)
+  glucose_raw_ <- nutrisense_raw(filepath = filepath, skip_lines = skip_lines)
+  glucose_raw <- xform_nutrisense(glucose_raw_, tz)
 
   return(list(username=username, glucose_raw=arrange(glucose_raw, `time`)))
 }
