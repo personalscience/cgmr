@@ -70,10 +70,20 @@ test_that("AUC for all specific foods are correct", {
                             glucose_records = glucose_records) %>% pull(iAUC),
                c(82.2, 7.92, 33.8),
                tolerance = 0.001)
+  expect_equal(auc_for_food(foodname = "garbagevalue",
+                            notes_records = notes_records,
+                            glucose_records = glucose_records),
+               NA)
+
   expect_equal(df_for_all_auc(food_list = c("Blueberries", "watermelon"),
                               glucose_records = glucose_records,
                               notes_records = notes_records) %>% pull(iAUC),
                c(238.5, 506, 82.2, 7.92, 33.8),
+               tolerance = 0.001)
+  expect_equal(df_for_all_auc(food_list = c("garbagevalue", "watermelon"),
+                              glucose_records = glucose_records,
+                              notes_records = notes_records) %>% pull(iAUC),
+               c(238.5, 506),
                tolerance = 0.001)
 })
 

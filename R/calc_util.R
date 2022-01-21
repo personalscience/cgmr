@@ -146,7 +146,7 @@ auc_for_food <- function(foodname = "Munk Pack",
                                       timeLength = timeLength,
                                       foodname=foodname)
 
-  fr <- food_results %>% group_by(meal) %>% mutate(time = t, first_val = first(value)) %>%
+  fr <- if(is.null(food_results)) NA else food_results %>% group_by(meal) %>% mutate(time = t, first_val = first(value)) %>%
     select(t,time,value, first_val, meal,date_ch, user_id) %>%
     filter(first_val < start_limit) %>%
     summarize(user_id, ave = mean(value), sd = sd(value), AUC = DescTools::AUC(t,value),
@@ -173,7 +173,8 @@ df_for_all_auc <- function(food_list,
     result <- auc_for_food(foodname = d,
                            glucose_records = glucose_records,
                            notes_records = notes_records,
-                           start_limit = 200) %>% mutate(foodname = d)
+                           start_limit = 200)
+    result <- if (anyNA(result)) NULL else result %>% mutate(foodname = d)
     df <- bind_rows(result,df)
   }
   return(df)

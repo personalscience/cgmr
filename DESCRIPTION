@@ -1,6 +1,6 @@
 Package: cgmr
 Title: Continuous Glucose Monitor Data Analysis
-Version: 0.0.6.7
+Version: 0.0.6.9
 Authors@R: 
     person(given = "Richard",
            family = "Sprague",
