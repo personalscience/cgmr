@@ -63,6 +63,24 @@ libreview_csv_df <- function(file=system.file("extdata",
 
 }
 
+#' @title Convert a Libreview Dataframe to a Canonical Dataframe
+#' @param libreview_raw dataframe of raw values as read from Libreview CSV file
+#' @return dataframe in canonical format
+#' @export
+glucose_df_from_libreview_raw <- function(libreview_raw) {
+  glucose_df <- libreview_raw %>%
+    #dplyr::filter(record_type != 6) %>% # Record type 6 does nothing
+    transmute(`time` = `timestamp`,
+              scan = glucose_scan,
+              hist = glucose_historic,
+              strip = strip_glucose,
+              value = hist,
+              food = notes) # dplyr::if_else(is.na(notes),notes, paste0("Notes=",notes))) #dplyr::if_else(is.na(notes),"no", "yes"))#paste0("Notes=",notes)))
+
+
+  return(glucose_df)
+}
+
 
 #' Read a valid libreview CSV file and return a dataframe and new user id
 #' Since Libreview files don't already include a user ID, append one to the dataframe that is returned.
@@ -85,17 +103,9 @@ glucose_df_from_libreview_csv <- function(file=system.file("extdata",
 
   skip_lines <- if_else(firstline[1] == "Glucose Data", 1, 2)
 
-  glucose_raw <- libreview_csv_df(file)
+  glucose_raw <- libreview_csv_df(file)[["glucose_raw"]]
 
-  glucose_df <- glucose_raw[["glucose_raw"]]  %>%
-    #dplyr::filter(record_type != 6) %>% # Record type 6 does nothing
-    transmute(`time` = `timestamp`,
-              scan = glucose_scan,
-              hist = glucose_historic,
-              strip = strip_glucose,
-              value = hist,
-              food = notes) # dplyr::if_else(is.na(notes),notes, paste0("Notes=",notes))) #dplyr::if_else(is.na(notes),"no", "yes"))#paste0("Notes=",notes)))
-
+  glucose_df <- glucose_df_from_libreview_raw(glucose_raw)
 
   glucose_df %>% add_column(user_id = user_id)
 

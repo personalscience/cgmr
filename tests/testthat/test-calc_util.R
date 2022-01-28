@@ -44,6 +44,12 @@ auc_example <- tibble(
              4)
 )
 
+norm_example <- bind_rows(
+  bind_cols(auc_example %>% transmute(t=time, value = value), meal = "first"),
+  tibble( t = c(10,20,25,30,50), value = c(-10,10,20,-30,-40), meal = "second"),
+  tibble( t = c(0,10,20,50,100), value = c(10,20,30,40,50), meal = "third"))
+
+
 
 
 test_that("AUC for typical meals", {
@@ -85,5 +91,10 @@ test_that("AUC for all specific foods are correct", {
                               notes_records = notes_records) %>% pull(iAUC),
                c(238.5, 506),
                tolerance = 0.001)
+})
+
+test_that("normalize works",{
+  expect_equal(normalize_value(norm_example) %>% pull(value),
+               c(0.00,  2.44,  2.39 , 0.77, -0.50, -0.06,  0.33, 0, 20, 30, -20, -30, 0, 10, 20, 30, 40))
 })
 
