@@ -25,7 +25,8 @@
 #' @param notes_records metadata associated with the dataframe
 cgm_data <- function(glucose_records, notes_records){
 
-  cgm_d <- list(glucose_records, notes_records)
+  cgm_d <- list(glucose_records = glucose_records,
+                notes_records = notes_records)
 
   return(cgm_d)
 

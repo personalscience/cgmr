@@ -4,14 +4,12 @@
 \alias{df_for_all_auc}
 \title{make one dataframe showing \code{auc_for_food()} for a vector of food names}
 \usage{
-df_for_all_auc(food_list, glucose_records, notes_records)
+df_for_all_auc(food_list, cgm_data)
 }
 \arguments{
 \item{food_list}{vector of character strings with each foodname}
 
-\item{glucose_records}{valid dataframe of glucose results}
-
-\item{notes_records}{valid dataframe of notes}
+\item{cgm_data}{CGM data object}
 }
 \value{
 dataframe representing all results of auc_for_food() calls

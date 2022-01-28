@@ -20,11 +20,12 @@ martha_notes <-
     file = system.file("extdata", package = "cgmr", "Firstname1Lastname1_notes.csv")
   )
 
-glucose_records <- bind_rows(martha_glucose,richard_glucose)
-notes_records <- bind_rows(martha_notes, richard_notes_glucose, richard_notes_notes)
+glucose_records_p <- bind_rows(martha_glucose,richard_glucose)
+notes_records_p <- bind_rows(martha_notes, richard_notes_glucose, richard_notes_notes)
+cgm_d <- cgm_data(glucose_records_p, notes_records_p)
 
-ftf_df0 <- food_times_df_fast(glucose_records, notes_records, prefixLength = 0)
-ftf_df1 <- food_times_df_fast(glucose_records, notes_records, prefixLength = 20, foodname = "blueberries")
+ftf_df0 <- food_times_df_fast(cgm_d, prefixLength = 0)
+ftf_df1 <- food_times_df_fast(cgm_d, prefixLength = 20, foodname = "blueberries")
 
 mealnames_blu <-
   as_tibble_col(c("1235-6/4-blueberries",
@@ -48,7 +49,7 @@ test_that("combined_food_times_df() gives reasonable answers",{
 })
 
 test_that("food_times_df can handle non-existent users", {
-  expect_equal(food_times_df_fast(glucose_records, notes_records, user_id = -1), NULL)
+  expect_equal(food_times_df_fast(cgm_d, user_id = -1), NULL)
 })
 
 

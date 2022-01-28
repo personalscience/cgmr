@@ -5,8 +5,7 @@
 \title{Glucose values after eating a specific food (deprecated)}
 \usage{
 food_times_df_fast(
-  glucose_df,
-  notes_df,
+  cgm_data,
   user_id = NULL,
   timeLength = 120,
   prefixLength = 0,
@@ -14,9 +13,7 @@ food_times_df_fast(
 )
 }
 \arguments{
-\item{glucose_df}{a valid glucose dataframe}
-
-\item{notes_df}{a valid notes dataframe}
+\item{cgm_data}{valid cgm_data object}
 
 \item{user_id}{user ID.  If NULL then assume all users}
 

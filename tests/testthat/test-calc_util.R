@@ -22,8 +22,9 @@ martha_notes <-
     file = system.file("extdata", package = "cgmr", "Firstname1Lastname1_notes.csv")
   )
 
-glucose_records <- bind_rows(martha_glucose,richard_glucose)
-notes_records <- bind_rows(martha_notes, richard_notes_glucose, richard_notes_notes)
+glucose_records_p <- bind_rows(martha_glucose,richard_glucose)
+notes_records_p <- bind_rows(martha_notes, richard_notes_glucose, richard_notes_notes)
+cgm_d <- cgm_data(glucose_records_p, notes_records_p)
 
 # from Table 5
 auc_example <- tibble(
@@ -53,7 +54,7 @@ norm_example <- bind_rows(
 
 
 test_that("AUC for typical meals", {
-  expect_equal(food_times_df_fast(glucose_records, notes_records, user_id = 1235) %>% group_by(meal) %>%
+  expect_equal(food_times_df_fast(cgm_d, user_id = 1235) %>% group_by(meal) %>%
                  summarize(auc=DescTools::AUC(t,value-first(value))) %>%
                  pull(auc) %>% as.integer(),
                c(-484,228))
@@ -71,24 +72,18 @@ test_that("Full incremental AUC values are correct", {
 })
 
 test_that("AUC for all specific foods are correct", {
-  expect_equal(auc_for_food(foodname = "Blueberries",
-                            notes_records = notes_records,
-                            glucose_records = glucose_records) %>% pull(iAUC),
+  expect_equal(auc_for_food(foodname = "Blueberries", cgm_d) %>% pull(iAUC),
                c(82.2, 7.92, 33.8),
                tolerance = 0.001)
-  expect_equal(auc_for_food(foodname = "garbagevalue",
-                            notes_records = notes_records,
-                            glucose_records = glucose_records),
+  expect_equal(auc_for_food(foodname = "garbagevalue",cgm_d),
                NA)
 
   expect_equal(df_for_all_auc(food_list = c("Blueberries", "watermelon"),
-                              glucose_records = glucose_records,
-                              notes_records = notes_records) %>% pull(iAUC),
+                              cgm_d) %>% pull(iAUC),
                c(238.5, 506, 82.2, 7.92, 33.8),
                tolerance = 0.001)
   expect_equal(df_for_all_auc(food_list = c("garbagevalue", "watermelon"),
-                              glucose_records = glucose_records,
-                              notes_records = notes_records) %>% pull(iAUC),
+                              cgm_d) %>% pull(iAUC),
                c(238.5, 506),
                tolerance = 0.001)
 })

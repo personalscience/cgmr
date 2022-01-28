@@ -127,24 +127,22 @@ auc_calc <- function(glucose_df, timelength = 120) {
 #' @description This is a wrapper to `food_times_df()`. Given a foodname, returns a dataframe with every
 #' occurence of that food, with a `timeLength` minutes since eating.
 #' @param start_limit filter to cut off any results that have more than this mg/mL when starting
-#' @param glucose_records valid dataframe of glucose results
-#' @param notes_records valid dataframe of notes
+#' @param cgm_data CGM object
 #' @param foodname character string representing the food item of interest
 #' @param timeLength number of minutes for the glucose record to show after the food was eaten.
 #' @param prefixLength number of additional minutes to add before the starttime.
 #' @return dataframe
 #' @export
 auc_for_food <- function(foodname = "Munk Pack",
-                         glucose_records,
-                         notes_records,
+                         cgm_data,
                          prefixLength = 0,
                          timeLength = 150,
                          start_limit = 100) {
-  food_results <- food_times_df(glucose_df = glucose_records,
-                                      notes_df = notes_records,
-                                      prefixLength = prefixLength,
-                                      timeLength = timeLength,
-                                      foodname=foodname)
+
+  food_results <- food_times_df(cgm_data,
+                                prefixLength = prefixLength,
+                                timeLength = timeLength,
+                                foodname=foodname)
 
   fr <- if(is.null(food_results)) NA else food_results %>% group_by(meal) %>% mutate(time = t, first_val = first(value)) %>%
     select(t,time,value, first_val, meal,date_ch, user_id) %>%
@@ -160,19 +158,15 @@ auc_for_food <- function(foodname = "Munk Pack",
 
 #' @title make one dataframe showing `auc_for_food()` for a vector of food names
 #' @param food_list vector of character strings with each foodname
-#' @param glucose_records valid dataframe of glucose results
-#' @param notes_records valid dataframe of notes
+#' @param cgm_data CGM data object
 #' @return dataframe representing all results of auc_for_food() calls
 #' @export
-df_for_all_auc <- function(food_list,
-                           glucose_records,
-                           notes_records) {
+df_for_all_auc <- function(food_list, cgm_data) {
 
   df <- NULL
   for(d in food_list ) {
     result <- auc_for_food(foodname = d,
-                           glucose_records = glucose_records,
-                           notes_records = notes_records,
+                           cgm_data,
                            start_limit = 200)
     result <- if (anyNA(result)) NULL else result %>% mutate(foodname = d)
     df <- bind_rows(result,df)

@@ -6,8 +6,7 @@
 \usage{
 auc_for_food(
   foodname = "Munk Pack",
-  glucose_records,
-  notes_records,
+  cgm_data,
   prefixLength = 0,
   timeLength = 150,
   start_limit = 100
@@ -16,9 +15,7 @@ auc_for_food(
 \arguments{
 \item{foodname}{character string representing the food item of interest}
 
-\item{glucose_records}{valid dataframe of glucose results}
-
-\item{notes_records}{valid dataframe of notes}
+\item{cgm_data}{CGM object}
 
 \item{prefixLength}{number of additional minutes to add before the starttime.}
 
