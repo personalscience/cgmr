@@ -7,12 +7,12 @@
 #' @return dataframe canonical Glucose format
 xform_nutrisense <- function(raw_data, tz) {
   result <- raw_data %>% # col_types = "cccdddddcddddcddddd") %>%
-    filter(class %in% c("GlucoseMeasurement", "Meal")) %>% arrange(occurred_at) %>%
-    transmute(value = if_else(!is.na(value), value,lag(value)),
-              time = lubridate::mdy_hm(occurred_at, tz = tz),
-              food = ifelse(!is.na(description), paste0("Notes=",description), NA),
-              scan = value,
-              hist = value)
+    filter(class %in% c("GlucoseMeasurement", "Meal")) %>% arrange(`occurred_at`) %>%
+    transmute(value = if_else(!is.na(`value`), `value`,lag(`value`)),
+              time = lubridate::mdy_hm(`occurred_at`, tz = `tz`),
+              food = ifelse(!is.na(`description`), paste0("Notes=",`description`), NA),
+              scan = `value`,
+              hist = `value`)
 
   return(result)
 }

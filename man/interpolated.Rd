@@ -4,9 +4,13 @@
 \alias{interpolated}
 \title{(UNFINISHED) Interpolate values between two vectors}
 \usage{
-interpolated(v1, v2, operator = function(x) {
-    x
-})
+interpolated(
+  v1,
+  v2,
+  operator = function(x) {
+     x
+ }
+)
 }
 \arguments{
 \item{v1}{first vector}
