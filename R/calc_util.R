@@ -147,7 +147,7 @@ auc_for_food <- function(foodname = "Munk Pack",
   fr <- if(is.null(food_results)) NA else food_results %>% group_by(meal) %>% mutate(time = t, first_val = first(value)) %>%
     select(t,time,value, first_val, meal,date_ch, user_id) %>%
     filter(first_val < start_limit) %>%
-    summarize(user_id, ave = mean(value), sd = sd(value), AUC = DescTools::AUC(t,value),
+    reframe(user_id, ave = mean(value), sd = sd(value), AUC = DescTools::AUC(t,value),
               n = n(),
               iAUC = auc_calc(glucose_df = tibble(time,value))) %>% filter(iAUC > 0) %>%
     distinct() %>%
