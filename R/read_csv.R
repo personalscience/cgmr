@@ -1,5 +1,29 @@
 # Initial constants ----
 
+utils::globalVariables(c("glucose_scan",
+                         "glucose_historic",
+                         "strip_glucose",
+                         "hist",
+                         "notes",
+                         "Device Timestamp",
+                         "Record Type",
+                         "Historic Glucose mg/dL",
+                         "Scan Glucose mg/dL",
+                         "Strip Glucose mg/dL",
+                         "Notes",
+                         "Device",
+                         "Serial Number",
+                         "Non-numeric Food",
+                         "Carbohydrates (grams)",
+                         "Time (UTC)",
+                         "Type of Reading",
+                         "Glucose Reading (mg/dL)",
+                         "food",
+                         "time",
+                         "timestamp",
+                         "user_id",
+                         "date_ch"
+                         ))
 
 #' @title Possible values for `Activity` column in Notes.
 NOTES_COLUMNS <- c("Start", "End", "Activity","Comment", "Z","user_id", "TZ")
