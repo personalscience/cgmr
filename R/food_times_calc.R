@@ -135,7 +135,7 @@ food_times_df_fast <-
 #' `t`, `value`, `username`, `date-ch`, `timestamp`, `meal`, `foodname`, `user_id`
 #' @param user_id user ID.  If NULL then assume all users
 #' @param cgm_data CGM data object
-#' @param foodname character string representing the food item of interest
+#' @param foodnames list of character strings representing the food items of interest
 #' @param timeLength number of minutes for the glucose record to show after the food was eaten.
 #' @param prefixLength number of additional minutes to add before the starttime.
 #' @return dataframe
@@ -145,9 +145,16 @@ food_times_df <-
            user_id = NULL,
            timeLength = 120,
            prefixLength = 0,
-           foodname = "watermelon") {
+           foodnames = list("watermelon")) {
+    results <- lapply(foodnames, function(foodname) {
+      food_times_df_fast(
+        cgm_data,
+        user_id = user_id,
+        timeLength = timeLength,
+        prefixLength = prefixLength,
+        foodname = foodname
+      )
+    })
 
-
-
-    return(food_times_df_fast(cgm_data, user_id, timeLength, prefixLength, foodname))
+    return(do.call(rbind, results))
   }

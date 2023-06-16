@@ -49,7 +49,7 @@ test_that("combined_food_times_df() gives reasonable answers",{
 })
 
 test_that("food_times_df can handle non-existent users", {
-  expect_equal(food_times_df_fast(cgm_d, user_id = -1), NULL)
+  expect_equal(food_times_df(cgm_d, user_id = -1), NULL)
 })
 
 

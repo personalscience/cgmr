@@ -9,7 +9,7 @@ food_times_df(
   user_id = NULL,
   timeLength = 120,
   prefixLength = 0,
-  foodname = "watermelon"
+  foodnames = list("watermelon")
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ food_times_df(
 
 \item{prefixLength}{number of additional minutes to add before the starttime.}
 
-\item{foodname}{character string representing the food item of interest}
+\item{foodnames}{list of character strings representing the food items of interest}
 }
 \value{
 dataframe
